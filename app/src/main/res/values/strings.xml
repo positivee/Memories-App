@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Memories</string>
+    <string name="action_profile">Profil</string>
+    <string name="action_logout">Wyloguj</string>
+</resources>

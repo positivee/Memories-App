@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "90182283119",
+    "firebase_url": "https://memories-e30c1.firebaseio.com",
+    "project_id": "memories-e30c1",
+    "storage_bucket": "memories-e30c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90182283119:android:f47a2527262a971ddc829a",
+        "android_client_info": {
+          "package_name": "pl.kamil_biernacki.memories"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90182283119-v7j55n3arlduj6ho0ill8llj08g52t6k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.kamil_biernacki.memories",
+            "certificate_hash": "b5f75cdd364f6af5d820201e5721b0ff2558d7a6"
+          }
+        },
+        {
+          "client_id": "90182283119-i9boi749pau52ob9qpafjujnjkm3l80q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.kamil_biernacki.memories",
+            "certificate_hash": "e674e4bb6d9be9b8f5cb3cf6697c8e21c77a87f1"
+          }
+        },
+        {
+          "client_id": "90182283119-7s70df1pcnidk3lbok0s6j2bl72c7euu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHC_MSZGBnz5tHGabP4F7k-PPqYTmsePo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90182283119-7s70df1pcnidk3lbok0s6j2bl72c7euu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
