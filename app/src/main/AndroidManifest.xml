@@ -6,14 +6,27 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/memories"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewMemoryActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".UpdateDeleteMemoryActivity"
+            android:parentActivityName=".MainActivity">
+            <!--<meta-data  android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.kamil_biernacki.memories.MainActivity"
+                />-->
+        </activity>
+
+        <activity
+            android:name=".NewMemoryActivity"
+            android:parentActivityName=".MainActivity"
+
+            />
+
+        <activity android:name=".ProfileActivity"
+                    android:parentActivityName=".MainActivity"/>
+
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -23,6 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -30,11 +44,7 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

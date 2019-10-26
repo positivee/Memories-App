@@ -39,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+
         mEmail =findViewById(R.id.email);
         mName =findViewById(R.id.profileFullName);
         mPhone =findViewById(R.id.phone);

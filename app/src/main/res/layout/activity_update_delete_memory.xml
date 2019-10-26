@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewMemoryActivity">
+    tools:context=".UpdateDeleteMemoryActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent">
 
+
         <EditText
-            android:id="@+id/new_memory_title"
+            android:id="@+id/memoryTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -29,7 +30,7 @@
             android:alpha=".3"/>
 
         <EditText
-            android:id="@+id/new_memory_content"
+            android:id="@+id/memoryContent"
             android:layout_width="match_parent"
             android:layout_height="258dp"
             android:backgroundTint="@android:color/transparent"
@@ -40,10 +41,16 @@
             android:padding="10dp" />
 
         <Button
-            android:id="@+id/create_memory"
+            android:id="@+id/update_memory"
             android:layout_width="match_parent"
             android:layout_height="66dp"
-            android:text="Dodaj wspomnienie" />
+            android:text="Edytuj wspomnienie" />
+
+        <Button
+            android:id="@+id/delete_memory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="USUŃ WSPOMNIENIE" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

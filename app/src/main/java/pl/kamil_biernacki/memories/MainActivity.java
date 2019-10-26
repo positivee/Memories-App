@@ -1,21 +1,52 @@
 package pl.kamil_biernacki.memories;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.database.SnapshotParser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+
+
 public class MainActivity extends AppCompatActivity {
+
+
+
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private FirebaseRecyclerAdapter adapter;
+    private FirebaseAuth fAuth;
+    private DatabaseReference reference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,15 +55,27 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        recyclerView = findViewById(R.id.list);
+
+        linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        fetch_from_database();
+
+
+
         FloatingActionButton fab = findViewById(R.id.add_memory_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(),NewMemoryActivity.class));
-                finish();
+
             }
         });
+
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -51,16 +94,117 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(getApplicationContext(),ProfileActivity.class));
-            finish();
+
         }
         if (id == R.id.action_logout) {
 
             FirebaseAuth.getInstance().signOut();
-            Toast.makeText(MainActivity.this, "Wylogowano",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Wylogowano", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(),LoginActivity.class));
             finish();
 
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
+
+
+    private void fetch_from_database() {
+        fAuth =FirebaseAuth.getInstance();
+        Query query = FirebaseDatabase.getInstance().getReference().child("Memories").child(fAuth.getCurrentUser().getUid())/*.orderByChild("")*/;
+
+
+        FirebaseRecyclerOptions<MemoryModel> options =
+                new FirebaseRecyclerOptions.Builder<MemoryModel>()
+                        .setQuery(query, new SnapshotParser<MemoryModel>() {
+                            @NonNull
+                            @Override
+                            public MemoryModel parseSnapshot(@NonNull DataSnapshot snapshot) {
+                                return new MemoryModel(
+                                        snapshot.child("title").getValue().toString(),
+                                        snapshot.child("content").getValue().toString(),
+                                        snapshot.child("timestamp").getValue().toString());
+
+                            }
+                        })
+                        .build();
+
+        adapter = new FirebaseRecyclerAdapter<MemoryModel, MemoryViewHolder>(options) {
+            @Override
+            public MemoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.single_memory_layout, parent, false);
+
+
+                return new MemoryViewHolder(view);
+
+            }
+
+
+
+
+
+
+            @Override
+            protected void onBindViewHolder(MemoryViewHolder holder, final int position, MemoryModel model) {
+
+                holder.setMemoryTitle(model.getTitle());
+                holder.setMemoryContent(model.getContent());
+                GetTimeAgo getTimeAgo = new GetTimeAgo();
+                holder.setMemoryTime(getTimeAgo.getTimeAgo(Long.parseLong(model.getMemoryTime()),getApplicationContext()));
+
+
+                holder.root.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                     /* Toast.makeText(MainActivity.this, String.valueOf(position), Toast.LENGTH_SHORT).show();*/
+                        final String noteID = getRef(position).getKey();
+                        Log.d("noteID", noteID);
+
+
+                        Intent intent = new Intent(MainActivity.this, UpdateDeleteMemoryActivity.class);
+                        intent.putExtra("noteID", noteID);
+                        startActivity(intent);
+
+
+
+                    }
+                });
+
+               /* holder.root.setOnLongClickListener( new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    Toast.makeText(MainActivity.this, "WHAT A LONG PRESS", Toast.LENGTH_SHORT).show();
+                    return true;
+                    }
+                });*/
+
+
+
+
+
+
+            }
+
+
+
+
+        };
+        recyclerView.setAdapter(adapter);
+
+    }
+
+
 }

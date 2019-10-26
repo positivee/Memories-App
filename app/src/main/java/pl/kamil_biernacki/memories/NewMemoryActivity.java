@@ -36,17 +36,18 @@ public class NewMemoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_memory);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
 
         mButtonCreate = findViewById(R.id.create_memory);
         mTitile = findViewById(R.id.new_memory_title);
         mContent= findViewById(R.id.new_memory_content);
 
-        mToolbar= findViewById(R.id.new_memory_toolbar);
 
-        setSupportActionBar(mToolbar);
+
 
         fAuth =FirebaseAuth.getInstance();
-        fMemoryDatabase=FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
+        fMemoryDatabase=FirebaseDatabase.getInstance().getReference().child("Memories").child(fAuth.getCurrentUser().getUid());
 
 
         mButtonCreate.setOnClickListener(new View.OnClickListener() {
