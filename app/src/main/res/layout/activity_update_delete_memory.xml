@@ -12,6 +12,12 @@
         android:layout_height="match_parent">
 
 
+        <ImageView
+            android:id="@+id/memoryImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            tools:srcCompat="@tools:sample/avatars[1]" />
+
         <EditText
             android:id="@+id/memoryTitle"
             android:layout_width="match_parent"
@@ -21,7 +27,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:background="@android:color/transparent"
-            android:hint="Type your title here..."
+            android:hint="Tytuł twojego wspomnienia"
             android:padding="10dp" />
         <View
             android:layout_width="match_parent"
@@ -36,7 +42,7 @@
             android:backgroundTint="@android:color/transparent"
             android:ems="10"
             android:gravity="start|top"
-            android:hint="Type your description... here"
+            android:hint="Opisz swoje wspomnienie"
             android:inputType="textMultiLine"
             android:padding="10dp" />
 
@@ -46,11 +52,7 @@
             android:layout_height="66dp"
             android:text="Edytuj wspomnienie" />
 
-        <Button
-            android:id="@+id/delete_memory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="USUŃ WSPOMNIENIE" />
+
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

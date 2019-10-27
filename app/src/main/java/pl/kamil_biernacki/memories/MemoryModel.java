@@ -1,20 +1,35 @@
 package pl.kamil_biernacki.memories;
 
+import android.net.Uri;
+
 public class MemoryModel {
 
     public String title,content,memoryTime;
+    public String image;
 
 
     public MemoryModel(){
 
     }
 
-    public MemoryModel(String title, String content, String memoryTime) {
+    public MemoryModel(String title, String content, String image, String memoryTime) {
 
         this.title = title;
         this.content = content;
+       this.image=image;
         this.memoryTime = memoryTime;
+
     }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+
 
     public String getTitle() {
         return title;

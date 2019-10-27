@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,9 +33,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseRecyclerAdapter adapter;
     private FirebaseAuth fAuth;
     private DatabaseReference reference;
+    private TextView mlat,mlng;
 
 
     @Override
@@ -55,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mlat =findViewById(R.id.lat);
+        mlng = findViewById(R.id.lng);
         recyclerView = findViewById(R.id.list);
 
         linearLayoutManager = new LinearLayoutManager(this);
@@ -68,7 +75,11 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),NewMemoryActivity.class));
+
+                Intent intent = new Intent(MainActivity.this, NewMemoryActivity.class);
+                intent.putExtra("latitude",""+ 0);
+                intent.putExtra("longitude",""  + 0);
+                startActivity(intent);
 
             }
         });
@@ -133,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                                 return new MemoryModel(
                                         snapshot.child("title").getValue().toString(),
                                         snapshot.child("content").getValue().toString(),
+                                        snapshot.child("image").getValue().toString(),
                                         snapshot.child("timestamp").getValue().toString());
 
                             }
@@ -161,7 +173,10 @@ public class MainActivity extends AppCompatActivity {
 
                 holder.setMemoryTitle(model.getTitle());
                 holder.setMemoryContent(model.getContent());
+
+                 holder.setMemoryImg(model.getImage());
                 GetTimeAgo getTimeAgo = new GetTimeAgo();
+                holder.setMemoryTime(model.getMemoryTime());
                 holder.setMemoryTime(getTimeAgo.getTimeAgo(Long.parseLong(model.getMemoryTime()),getApplicationContext()));
 
 
@@ -182,23 +197,43 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-               /* holder.root.setOnLongClickListener( new View.OnLongClickListener() {
+                holder.root.setOnLongClickListener( new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
 
+                    String noteID = getRef(position).getKey();
+                    reference=FirebaseDatabase.getInstance().getReference().child("Memories").child(fAuth.getCurrentUser().getUid());
+                    reference.child(noteID).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.hasChild("lat") && dataSnapshot.hasChild("lng")) {
+                                String lat = dataSnapshot.child("lat").getValue().toString();
+                                String lng = dataSnapshot.child("lng").getValue().toString();
+                                mlat.setText(lat);
+                                mlng.setText(lng);
+                            }
+                            }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Toast.makeText(MainActivity.this,databaseError.getMessage(),Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+
+                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+
+                   intent.putExtra("latitude",""+ mlat.getText().toString());
+                    intent.putExtra("longitude","" + mlng.getText().toString());
+                    startActivity(intent);
+                    finish();
+                   Log.d("LAT",mlat.getText().toString());
+                    Log.d("LNG",mlng.getText().toString());
                     Toast.makeText(MainActivity.this, "WHAT A LONG PRESS", Toast.LENGTH_SHORT).show();
                     return true;
                     }
-                });*/
-
-
-
-
-
+                });
 
             }
-
-
 
 
         };
@@ -206,5 +241,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    public interface MyCallback {
+        String onCallbackLat(String value);
+        void onCallbackLng(String value);
+    }
 }

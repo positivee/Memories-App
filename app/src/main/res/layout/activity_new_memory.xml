@@ -11,6 +11,12 @@
         android:orientation="vertical"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/add_img"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@color/colorPrimary" />
+
         <EditText
             android:id="@+id/new_memory_title"
             android:layout_width="match_parent"
@@ -20,13 +26,15 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:background="@android:color/transparent"
-            android:hint="Type your title here..."
+            android:hint="Tytuł twojego wspomnienia"
             android:padding="10dp" />
+
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/black"
-            android:alpha=".3"/>
+            android:alpha=".3"
+            android:background="@android:color/black" />
 
         <EditText
             android:id="@+id/new_memory_content"
@@ -35,15 +43,36 @@
             android:backgroundTint="@android:color/transparent"
             android:ems="10"
             android:gravity="start|top"
-            android:hint="Type your description... here"
+            android:hint="Opisz swoje wspomnienie"
             android:inputType="textMultiLine"
             android:padding="10dp" />
+
+        <Button
+            android:id="@+id/add_localiztion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/uni_sans_heavy"
+            android:text="DODAJ lOKALIZACJE" />
+
+        <TextView
+            android:id="@+id/locationTextLat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lokalizacja" />
+
+        <TextView
+            android:id="@+id/locationTextLng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOKALIZACJA" />
 
         <Button
             android:id="@+id/create_memory"
             android:layout_width="match_parent"
             android:layout_height="66dp"
+            android:fontFamily="@font/uni_sans_heavy"
             android:text="Dodaj wspomnienie" />
+
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
