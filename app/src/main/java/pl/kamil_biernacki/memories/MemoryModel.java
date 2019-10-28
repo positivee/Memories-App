@@ -1,14 +1,12 @@
 package pl.kamil_biernacki.memories;
 
-import android.net.Uri;
-
 public class MemoryModel {
 
-    public String title,content,memoryTime;
+    public String title, content, memoryTime;
     public String image;
 
 
-    public MemoryModel(){
+    public MemoryModel() {
 
     }
 
@@ -16,7 +14,7 @@ public class MemoryModel {
 
         this.title = title;
         this.content = content;
-       this.image=image;
+        this.image = image;
         this.memoryTime = memoryTime;
 
     }
@@ -28,7 +26,6 @@ public class MemoryModel {
     public void setImage(String image) {
         this.image = image;
     }
-
 
 
     public String getTitle() {

@@ -1,14 +1,7 @@
 package pl.kamil_biernacki.memories;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.app.ActionBar;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -32,7 +25,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -44,20 +36,23 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class UpdateDeleteMemoryActivity extends AppCompatActivity {
 
-    private Button mButtonDelete,mButtonUpdate;
+    private Button mButtonUpdate;
     private ImageView mImage;
-    private EditText mTitile,mContent;
+    private EditText mTitile, mContent;
 
     private FirebaseAuth fAuth;
     private String noteID;
     private boolean isExist;
     private DatabaseReference reference;
     public Uri imageUri;
-    public String myUrl="";
+    public String myUrl = "";
     StorageTask uploadTask;
     FirebaseStorage storage;
     private StorageReference storageReference;
@@ -87,11 +82,11 @@ public class UpdateDeleteMemoryActivity extends AppCompatActivity {
 
         mTitile = findViewById(R.id.memoryTitle);
         mContent = findViewById(R.id.memoryContent);
-        mImage =findViewById(R.id.memoryImage);
+        mImage = findViewById(R.id.memoryImage);
         mButtonUpdate = findViewById(R.id.update_memory);
 
 
-        fAuth =FirebaseAuth.getInstance();
+        fAuth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance().getReference().child("Memories").child(fAuth.getCurrentUser().getUid());
         storage = FirebaseStorage.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("Images");
@@ -101,25 +96,21 @@ public class UpdateDeleteMemoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String title = mTitile.getText().toString();
                 String content = mContent.getText().toString();
-                updateMemory(title,content,myUrl);
+                updateMemory(title, content, myUrl);
 
 
+                if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(content) && myUrl != "") {
+                    if (uploadTask != null && uploadTask.isInProgress()) {
+                        Toast.makeText(UpdateDeleteMemoryActivity.this, "Zdjecie jest wysyłane!", Toast.LENGTH_SHORT).show();
 
-
-                    if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(content)&& myUrl!= "") {
-                        if(uploadTask !=null && uploadTask.isInProgress()) {
-                            Toast.makeText(UpdateDeleteMemoryActivity.this, "Zdjecie jest wysyłane!", Toast.LENGTH_SHORT).show();
-
-                            updateMemory(title, content, myUrl);
-
-                        }
-                    } else {
-                        Snackbar.make(v, "Uzupełnij puste pola", Snackbar.LENGTH_SHORT).show();
+                        updateMemory(title, content, myUrl);
 
                     }
+                } else {
+                    Snackbar.make(v, "Uzupełnij puste pola", Snackbar.LENGTH_SHORT).show();
+
                 }
-
-
+            }
 
 
         });
@@ -134,18 +125,18 @@ public class UpdateDeleteMemoryActivity extends AppCompatActivity {
         putData();
     }
 
-    private void updateMemory(String title, String content,String myUrl) {
+    private void updateMemory(String title, String content, String myUrl) {
 
         if (fAuth.getCurrentUser() != null) {
 
-            if (isExist ) {
+            if (isExist) {
                 // UPDATE A NOTE
 
 
                 Map updateMap = new HashMap();
                 updateMap.put("title", mTitile.getText().toString().trim());
                 updateMap.put("content", mContent.getText().toString().trim());
-                if(myUrl!="")updateMap.put("image",myUrl);
+                if (myUrl != "") updateMap.put("image", myUrl);
                 updateMap.put("timestamp", ServerValue.TIMESTAMP);
 
                 reference.child(noteID).updateChildren(updateMap);
@@ -156,6 +147,7 @@ public class UpdateDeleteMemoryActivity extends AppCompatActivity {
             }
         }
     }
+
     private void deleteMemory() {
 
         reference.child(noteID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -193,7 +185,7 @@ public class UpdateDeleteMemoryActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(UpdateDeleteMemoryActivity.this,databaseError.getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(UpdateDeleteMemoryActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
 
                 }
             });
@@ -217,22 +209,24 @@ public class UpdateDeleteMemoryActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.delete_memory_button) {
             deleteMemory();
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
 
 
         return super.onOptionsItemSelected(item);
     }
-    private String getExtension(Uri uri){
-        ContentResolver cr= getContentResolver();
-        MimeTypeMap mimeTypeMap=MimeTypeMap.getSingleton();
-        return  mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
-    }
-    private void FileUploader(){
 
-        final StorageReference Ref =storageReference.child(fAuth.getCurrentUser().getUid()).child(System.currentTimeMillis()+"."+getExtension(imageUri));
-        uploadTask=Ref.putFile(imageUri)
+    private String getExtension(Uri uri) {
+        ContentResolver cr = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
+    }
+
+    private void FileUploader() {
+
+        final StorageReference Ref = storageReference.child(fAuth.getCurrentUser().getUid()).child(System.currentTimeMillis() + "." + getExtension(imageUri));
+        uploadTask = Ref.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -240,15 +234,14 @@ public class UpdateDeleteMemoryActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
 
-                                myUrl=uri.toString();
-
+                                myUrl = uri.toString();
 
 
                             }
                         });
 
 
-                        Toast.makeText(UpdateDeleteMemoryActivity.this,"Zdjecie dodane",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateDeleteMemoryActivity.this, "Zdjecie dodane", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -260,22 +253,20 @@ public class UpdateDeleteMemoryActivity extends AppCompatActivity {
                 });
 
 
-
-
-
     }
-    private void FileChooser(){
-        Intent intent= new Intent();
+
+    private void FileChooser() {
+        Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent,1);
+        startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1 && resultCode==RESULT_OK && data!=null && data.getData()!=null);
-        imageUri=data.getData();
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) ;
+        imageUri = data.getData();
 
         mImage.setImageURI(imageUri);
         FileUploader();

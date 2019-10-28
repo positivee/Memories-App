@@ -1,9 +1,9 @@
 package pl.kamil_biernacki.memories;
 
 public class User {
-    public String name,email,phone;
+    public String name, email, phone;
 
-    public User(){
+    public User() {
 
     }
 

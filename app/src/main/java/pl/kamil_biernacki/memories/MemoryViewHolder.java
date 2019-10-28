@@ -1,19 +1,14 @@
 package pl.kamil_biernacki.memories;
 
-import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.net.URI;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MemoryViewHolder extends RecyclerView.ViewHolder {
 
@@ -39,24 +34,22 @@ public class MemoryViewHolder extends RecyclerView.ViewHolder {
 
     public void setMemoryImg(String img) {
 
-            Picasso.get().load(img).into(imageView);
+        Picasso.get().load(img).into(imageView);
 
     }
 
 
-    public void setMemoryTitle(String title){
+    public void setMemoryTitle(String title) {
         textTitle.setText(title);
     }
 
-    public void setMemoryTime(String time){
+    public void setMemoryTime(String time) {
         textTime.setText(time);
     }
 
-    public void setMemoryContent(String content){
+    public void setMemoryContent(String content) {
         textContent.setText(content);
     }
-
-
 
 
 }
