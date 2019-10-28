@@ -211,6 +211,12 @@ public class MainActivity extends AppCompatActivity {
                                 String lng = dataSnapshot.child("lng").getValue().toString();
                                 mlat.setText(lat);
                                 mlng.setText(lng);
+                                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+
+                                intent.putExtra("latitude",""+ mlat.getText().toString());
+                                intent.putExtra("longitude","" + mlng.getText().toString());
+                                startActivity(intent);
+
                             }
                             }
                         @Override
@@ -220,12 +226,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                 /*   Intent intent = new Intent(MainActivity.this, MapsActivity.class);
 
                    intent.putExtra("latitude",""+ mlat.getText().toString());
                     intent.putExtra("longitude","" + mlng.getText().toString());
                     startActivity(intent);
-                    finish();
+                    finish();*/
                    Log.d("LAT",mlat.getText().toString());
                     Log.d("LNG",mlng.getText().toString());
                     Toast.makeText(MainActivity.this, "WHAT A LONG PRESS", Toast.LENGTH_SHORT).show();

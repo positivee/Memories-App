@@ -101,7 +101,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:fontFamily="@font/uni_sans_thin"
+        android:fontFamily="@font/uni_sans_heavy"
         android:text="Nie masz konta ? Zarejestruj się !"
         android:textAlignment="center"
         android:textColor="@color/design_default_color_primary"

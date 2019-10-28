@@ -23,7 +23,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private Button add_location;
     String lat,lng;
-    Double lati,lngi;
+    Double lati=0.0,lngi=0.0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +40,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             lat = extras.getString("latitude");
             lng = extras.getString("longitude");
             add_location.setVisibility(View.INVISIBLE);
+            lati =Double.parseDouble(lat);
+            lngi = Double.parseDouble(lng);
         }else {
             add_location.setVisibility(View.VISIBLE);
         }
-        lati =Double.parseDouble(lat);
-         lngi = Double.parseDouble(lng);
+
        /*  lati =Float.parseFloat(lat);
         lngi = Float.parseFloat(lng);*/
     }
