@@ -13,8 +13,48 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:text="Dodaj lokalizacje"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="100dp"
         android:layout_marginRight="20dp"
         android:fontFamily="@font/uni_sans_heavy"
         android:visibility="invisible"/>
+
+
+    <Button
+        android:id="@+id/my_location"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_gravity="right|top"
+         android:layout_marginTop="75dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/ic_my_location_black_24dp"/>
+    <TextView
+        android:id="@+id/lat_view_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Szerokość geograficzna:"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="25dp"/>
+    <TextView
+        android:id="@+id/lat_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="xx.xxxx"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="200dp"/>
+
+    <TextView
+        android:id="@+id/long_view_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Długość geograficzna: "
+        android:layout_gravity="right|bottom"/>
+    <TextView
+        android:id="@+id/long_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="xx.xxxx"
+        android:layout_gravity="right|bottom"
+        android:layout_marginLeft="200dp"/>
+
     </fragment>

@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -18,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -53,6 +58,8 @@ public class NewMemoryActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 2;
     private FirebaseAuth fAuth;
     private DatabaseReference fMemoryDatabase;
+    private FusedLocationProviderClient mFusedLocationClient;
+    LatLng geoPoint;
 
     public Uri imageUri;
     public String myUrl = "";
@@ -138,6 +145,9 @@ public class NewMemoryActivity extends AppCompatActivity {
         mAddLocalization.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+               /* getLastKnownLocation();*/
+                /*Log.d("LOCATION",""+ geoPoint.latitude);
+                Log.d("LOCATION2", ""+geoPoint.longitude);*/
                 Intent intent = new Intent(NewMemoryActivity.this, MapsActivity.class);
                 startActivity(intent);
             }
@@ -145,7 +155,20 @@ public class NewMemoryActivity extends AppCompatActivity {
 
 
     }
+    private void getLastKnownLocation(){
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if(task.isSuccessful()){
+                    Location location =task.getResult();
+                    geoPoint = new LatLng(location.getLatitude(),location.getLongitude());
+                    Log.d("LOCATION",""+ geoPoint.latitude);
+                    Log.d("LOCATION2", ""+geoPoint.longitude);
 
+                }
+            }
+        });
+    }
     private String getExtension(Uri uri) {
         ContentResolver cr = getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
@@ -184,6 +207,39 @@ public class NewMemoryActivity extends AppCompatActivity {
 
     }
 
+    public void FileUploaderCamera(Bitmap imageBitmap) {
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+        byte[] b = stream.toByteArray();
+        final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images").child(System.currentTimeMillis() + "image");
+        storageReference.putBytes(b).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+
+                        myUrl = uri.toString();
+
+
+                    }
+                });
+                Toast.makeText(NewMemoryActivity.this, "Zdjecie dodane", Toast.LENGTH_SHORT).show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+
+            }
+        });
+
+    }
+
+
     private void FileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -191,13 +247,15 @@ public class NewMemoryActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
 
     }
-    private void TakePicture() {
 
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    private void TakePicture() {
+          /* Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
+                }*/
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
 
 
     }
@@ -210,45 +268,15 @@ public class NewMemoryActivity extends AppCompatActivity {
             mAdd_img.setImageURI(imageUri);
             FileUploader();
         }
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-                Bundle extras = data.getExtras();
-                assert extras != null;
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                mAdd_img.setImageBitmap(imageBitmap);
-             /*  String linx = saveToInternalStorage(imageBitmap);
-              *//*  imageUri=imageUri2;*//*
-             *//*   imageUri= Uri.parse(linx);*//*
-                String mystring="Hello";
-                imageUri = Uri.parse(linx);
-                FileUploader();*/
-            }
-        }
 
-    }
-    private String saveToInternalStorage(Bitmap bitmapImage) {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File myPath = new File(directory, "kamil" + ".jpg");
-
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(myPath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fileOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            mAdd_img.setImageBitmap(imageBitmap);
+            FileUploaderCamera(imageBitmap);
         }
-        return myPath.getAbsolutePath();
     }
+
 
     private void createNote(String title, String content, String myUrl, String lat, String lng) {
         if (fAuth.getCurrentUser() != null) {

@@ -73,6 +73,9 @@
             android:fontFamily="@font/uni_sans_heavy"
             android:text="Dodaj wspomnienie" />
 
+
+
+
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

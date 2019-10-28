@@ -18,7 +18,6 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private TextView mPhone, mName, mEmail;
-    private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth fAuth;
     private FirebaseUser user;
 
@@ -57,54 +56,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
-       /*fAuth=FirebaseAuth.getInstance();
-       mFirebaseDatabase =FirebaseDatabase.getInstance();
-       myRef =mFirebaseDatabase.getReference();
-        FirebaseUser user = fAuth.getCurrentUser();
-        userID =user.getUid();
-
-        mAuthListener =new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null){
-
-                }
-                else{
-
-                }
-            }
-        };
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                showData(dataSnapshot);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        private void showData(DataSnapshot dataSnapshot) {
-            for(DataSnapshot ds : dataSnapshot.getChildern()){
-                User uInfo = new User();
-                uInfo.setName(ds.child(userID).getValue(User.class).getName());
-                uInfo.setEmail(ds.child(userID).getValue(User.class).getEmail());
-                uInfo.setPhone(ds.child(userID).getValue(User.class).getPhone());
-
-                ArrayList<String> array = new ArrayList<>();
-                array.add(uInfo.getName());
-                array.add(uInfo.getPhone());
-                array.add(uInfo.getEmail());
-            }
-
-        }
-*/
 
 
     }
